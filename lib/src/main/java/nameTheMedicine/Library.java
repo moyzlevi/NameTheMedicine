@@ -3,30 +3,37 @@
  */
 package nameTheMedicine;
 
-import static nameTheMedicine.util.XmlUtil.asList;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
 
 public class Library {
 
 	public static void main(String[] args) throws IOException {
-		String httpsURLAsString = "https://consultas.anvisa.gov.br/#/medicamentos/q/?nomeProduto=TYLENOL";
-//		Document doc = Jsoup.connect(httpsURLAsString).timeout(60000).validateTLSCertificates(false).get();
-		
-		File input = new File("/home/moyses/temp/input.html");
-		Document doc = Jsoup.parse(input, "UTF-8", httpsURLAsString);
-		
-		Elements tables = doc.getElementsByTag("table");
-		System.out.println(tables);
-	
-		System.out.println(tables.text());
+		File file = new File("/home/moyses/ws/java/NameTheMedicine/nameTheMedicine/lib/src/main/resources/med1.pdf");
+		System.out.println();
+		try (PDDocument document = PDDocument.load(file)) {
+
+			if (!document.isEncrypted()) {
+
+				PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+				stripper.setSortByPosition(true);
+				
+				PDFTextStripper tStripper = new PDFTextStripper();
+				tStripper.setStartPage(16);
+				tStripper.setStartPage(17);
+				
+				String pdfFileInText = tStripper.getText(document);
+
+				String lines[] = pdfFileInText.split("\\r?\\n");
+				for (String line : lines) {
+					System.out.println(line);
+				}
+			}
+		}
+
 	}
 }
