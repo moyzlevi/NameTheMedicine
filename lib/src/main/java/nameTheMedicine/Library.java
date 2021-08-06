@@ -3,8 +3,30 @@
  */
 package nameTheMedicine;
 
+import static nameTheMedicine.util.XmlUtil.asList;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.logging.Level;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 public class Library {
-    public boolean someLibraryMethod() {
-        return true;
-    }
+
+	public static void main(String[] args) throws IOException {
+		String httpsURLAsString = "https://consultas.anvisa.gov.br/#/medicamentos/q/?nomeProduto=TYLENOL";
+//		Document doc = Jsoup.connect(httpsURLAsString).timeout(60000).validateTLSCertificates(false).get();
+		
+		File input = new File("/home/moyses/temp/input.html");
+		Document doc = Jsoup.parse(input, "UTF-8", httpsURLAsString);
+		
+		Elements tables = doc.getElementsByTag("table");
+		System.out.println(tables);
+	
+		System.out.println(tables.text());
+	}
 }
